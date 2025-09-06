@@ -1,3 +1,4 @@
+import 'package:facerecording/recording_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConfigScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              initialValue: _selectedDevice,
+              value: _selectedDevice,
               hint: const Text('Select a Device'),
               onChanged: (String? newValue) {
                 setState(() {
@@ -50,7 +51,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              initialValue: _selectedTask,
+              value: _selectedTask,
               hint: const Text('Select a Task'),
               onChanged: (String? newValue) {
                 setState(() {
@@ -67,7 +68,25 @@ class _ConfigScreenState extends State<ConfigScreen> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
-                // TODO: Navigate to the recording screen
+                if (_selectedTask != null &&
+                    _selectedDevice != null &&
+                    _nameController.text.isNotEmpty) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => RecordingScreen(
+                        name: _nameController.text,
+                        device: _selectedDevice!,
+                        task: _selectedTask!,
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please fill all fields'),
+                    ),
+                  );
+                }
               },
               child: const Text('Start Recording'),
             ),
