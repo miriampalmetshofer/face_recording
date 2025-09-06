@@ -1,4 +1,5 @@
 import 'package:facerecording/recording_screen.dart';
+import 'package:facerecording/video_library_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConfigScreen extends StatefulWidget {
@@ -21,6 +22,18 @@ class _ConfigScreenState extends State<ConfigScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Configuration'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.library_books),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const VideoLibraryScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

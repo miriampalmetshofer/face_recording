@@ -1,6 +1,11 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:html' as html;
 
+import 'package:facerecording/camera_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class RecordingScreen extends StatefulWidget {
   final String task;
@@ -19,11 +24,28 @@ class RecordingScreen extends StatefulWidget {
 }
 
 class _RecordingScreenState extends State<RecordingScreen> {
+  late CameraService _cameraService;
+  bool _isCameraInitialized = false;
   Timer? _timer;
   int _remainingTime = 5;
   bool _isRecording = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _cameraService = getCameraService();
+    _cameraService.initialize().then((_) {
+      setState(() {
+        _isCameraInitialized = true;
+      });
+    });
+  }
+
   void _startTimer() {
+    if (!_isCameraInitialized) {
+      return;
+    }
+    _startRecording();
     setState(() {
       _isRecording = true;
     });
@@ -38,17 +60,50 @@ class _RecordingScreenState extends State<RecordingScreen> {
     });
   }
 
-  void _stopRecording() {
+  Future<void> _startRecording() async {
+    await _cameraService.startVideoRecording();
+  }
+
+  void _stopRecording() async {
+    if (!_isCameraInitialized) {
+      return;
+    }
     _timer?.cancel();
+    final file = await _cameraService.stopVideoRecording();
     setState(() {
       _isRecording = false;
     });
-    // TODO: Save the video
+
+    if (kIsWeb) {
+      final blob = html.Blob([await file.readAsBytes()]);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      final anchor = html.AnchorElement(href: url)
+        ..setAttribute('download', '${widget.name}_${widget.task}_${DateTime.now()}.mp4')
+        ..click();
+      html.Url.revokeObjectUrl(url);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Video downloaded.'),
+        ),
+      );
+    } else {
+      final directory = await getApplicationDocumentsDirectory();
+      final path = '${directory.path}/${widget.name}_${widget.task}_${DateTime.now()}.mp4';
+      await file.saveTo(path);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Video saved to: $path'),
+        ),
+      );
+    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _cameraService.dispose();
     super.dispose();
   }
 
@@ -60,13 +115,29 @@ class _RecordingScreenState extends State<RecordingScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              if (_isCameraInitialized)
+                SizedBox(
+                  width: 300,
+                  height: 300,
+                  child: _cameraService.buildPreview(),
+                )
+              else
+                const Center(child: CircularProgressIndicator()),
+              const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Placeholder', style: TextStyle(fontSize: 16)),
+                child: Text(
+                  'Placeholder',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
-              Text('$_remainingTime s', style: TextStyle(fontSize: 16)),
+              Text(
+                '$_remainingTime s',
+                style: TextStyle(fontSize: 16),
+              ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _isRecording ? null : _startTimer,
