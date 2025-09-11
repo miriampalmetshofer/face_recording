@@ -15,7 +15,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
   String? _selectedTask;
 
   final _devices = ['Desktop', 'Mobile'];
-  final _tasks = ['Task 1', 'Task 2'];
+  final _tasks = ['Task1', 'Task2'];
 
   @override
   Widget build(BuildContext context) {
