@@ -29,7 +29,7 @@ class MobileAndWebCameraService implements CameraService {
     }
 
     _controller = CameraController(
-      frontCamera ?? cameras.first, // Use front camera if available, otherwise default to the first camera
+      frontCamera ?? cameras.first,
       ResolutionPreset.medium,
     );
     await _controller.initialize();
@@ -37,7 +37,7 @@ class MobileAndWebCameraService implements CameraService {
 
   @override
   Widget buildPreview() {
-    return CameraPreview(_controller);
+    return const SizedBox.shrink();
   }
 
   @override

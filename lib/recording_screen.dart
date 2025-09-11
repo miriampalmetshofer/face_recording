@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:facerecording/web_utils.dart' if (dart.library.html) 'package:facerecording/web_utils_web.dart';
+import 'package:facerecording/web_utils.dart'
+    if (dart.library.html) 'package:facerecording/web_utils_web.dart';
 
 import 'package:facerecording/camera_service.dart';
 import 'package:flutter/foundation.dart';
@@ -23,11 +24,13 @@ class RecordingScreen extends StatefulWidget {
 }
 
 class _RecordingScreenState extends State<RecordingScreen> {
+  static const int _initialTime = 10;
   late CameraService _cameraService;
   bool _isCameraInitialized = false;
   Timer? _timer;
-  int _remainingTime = 5;
+  int _remainingTime = _initialTime;
   bool _isRecording = false;
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -71,25 +74,23 @@ class _RecordingScreenState extends State<RecordingScreen> {
     final file = await _cameraService.stopVideoRecording();
     setState(() {
       _isRecording = false;
+      _remainingTime = _initialTime;
     });
 
     if (kIsWeb) {
       downloadVideoWeb(file, widget.name, widget.task);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Video downloaded.'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Video downloaded.')));
     } else {
       final directory = await getApplicationDocumentsDirectory();
-      final path = '${directory.path}/${widget.name}_${widget.task}_${DateTime.now()}.mp4';
+      final path =
+          '${directory.path}/${widget.name}_${widget.task}_${DateTime.now()}.mp4';
       await file.saveTo(path);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Video saved to: $path'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Video saved to: $path')));
     }
   }
 
@@ -97,6 +98,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
   void dispose() {
     _timer?.cancel();
     _cameraService.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -104,40 +106,44 @@ class _RecordingScreenState extends State<RecordingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (_isCameraInitialized)
-                SizedBox(
-                  width: 300,
-                  height: 300,
-                  child: _cameraService.buildPreview(),
-                )
-              else
-                const Center(child: CircularProgressIndicator()),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Placeholder',
-                  style: TextStyle(fontSize: 16),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text(
+              'Stell dir vor, du wachst eines Morgens auf und das Internet existiert nicht mehr. '
+                  'Schreibe eine kurze Geschichte (ca. 4–6 Sätze) darüber, wie dein Tag aussehen würde\n\n'
+                  'Verbleibende Zeit: $_remainingTime s',
+              style: const TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 12),
+
+            // Show text area only while recording
+            if (_isRecording)
+              Expanded(
+                child: TextField(
+                  controller: _textEditingController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  expands: true,
+                  decoration: const InputDecoration(
+                    hintText: "Beginne hier zu schreiben...",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(16),
+                  ),
                 ),
               ),
-              Text(
-                '$_remainingTime s',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 32),
+
+            const SizedBox(height: 12),
+
+            if (!_isRecording && _isCameraInitialized)
               ElevatedButton(
-                onPressed: _isRecording ? null : _startTimer,
+                onPressed: _startTimer,
                 child: const Text('Start Recording'),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
