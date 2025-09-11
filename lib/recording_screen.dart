@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:facerecording/web_utils.dart'
     if (dart.library.html) 'package:facerecording/web_utils_web.dart';
-
 import 'package:facerecording/camera_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class RecordingScreen extends StatefulWidget {
@@ -92,6 +92,33 @@ class _RecordingScreenState extends State<RecordingScreen> {
         context,
       ).showSnackBar(SnackBar(content: Text('Video saved to: $path')));
     }
+
+    if (_textEditingController.text.trim().isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Danke das wars! Möchtest du deinen Text behalten?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Clipboard.setData(
+                  ClipboardData(text: _textEditingController.text),
+                );
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Text in Zwischenablage kopiert!')),
+                );
+              },
+              child: const Text("Ja, in Zwischenablage kopieren."),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Nein danke."),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -112,7 +139,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
           children: [
             Text(
               'Stell dir vor, du wachst eines Morgens auf und das Internet existiert nicht mehr. '
-                  'Schreibe eine kurze Geschichte (ca. 4–6 Sätze) darüber, wie dein Tag aussehen würde\n\n'
+                  'Schreibe eine kurze Geschichte darüber, wie dein Tag aussehen würde\n\n'
                   'Verbleibende Zeit: $_remainingTime s',
               style: const TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
