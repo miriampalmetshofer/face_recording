@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:html' as html;
+import 'package:facerecording/web_utils.dart' if (dart.library.html) 'package:facerecording/web_utils_web.dart';
 
 import 'package:facerecording/camera_service.dart';
 import 'package:flutter/foundation.dart';
@@ -75,13 +74,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
     });
 
     if (kIsWeb) {
-      final blob = html.Blob([await file.readAsBytes()]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', '${widget.name}_${widget.task}_${DateTime.now()}.mp4')
-        ..click();
-      html.Url.revokeObjectUrl(url);
-
+      downloadVideoWeb(file, widget.name, widget.task);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Video downloaded.'),
