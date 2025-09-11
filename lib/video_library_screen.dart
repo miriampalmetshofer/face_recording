@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
 class VideoLibraryScreen extends StatefulWidget {
@@ -46,9 +47,29 @@ class _VideoLibraryScreenState extends State<VideoLibraryScreen> {
                 final video = _videos[index];
                 return ListTile(
                   title: Text(video.path.split('/').last),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.share),
+                    onPressed: () => _onShareVideo(video.path),
+                  ),
                 );
               },
             ),
     );
   }
+
+  void _onShareVideo(String videoPath) async {
+    final File file = File(videoPath);
+    final result = await ImageGallerySaver.saveFile(file.path, isReturnPathOfIOS: true);
+
+    if (result['isSuccess'] == true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Video saved to gallery")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to save video")),
+      );
+    }
+  }
+
 }
