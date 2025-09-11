@@ -20,9 +20,16 @@ class MobileAndWebCameraService implements CameraService {
   @override
   Future<void> initialize() async {
     final cameras = await availableCameras();
-    final firstCamera = cameras.first;
+    CameraDescription? frontCamera;
+    for (var camera in cameras) {
+      if (camera.lensDirection == CameraLensDirection.front) {
+        frontCamera = camera;
+        break;
+      }
+    }
+
     _controller = CameraController(
-      firstCamera,
+      frontCamera ?? cameras.first, // Use front camera if available, otherwise default to the first camera
       ResolutionPreset.medium,
     );
     await _controller.initialize();
