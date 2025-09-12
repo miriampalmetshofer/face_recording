@@ -48,14 +48,64 @@ class _VideoLibraryScreenState extends State<VideoLibraryScreen> {
                 final video = _videos[index];
                 return ListTile(
                   title: Text(video.path.split('/').last),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.share),
-                    onPressed: () => _onShareVideo(video.path),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.share),
+                        onPressed: () => _onShareVideo(video.path),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _confirmDeleteVideo(video),
+                      ),
+                    ],
                   ),
                 );
               },
             ),
     );
+  }
+
+  void _confirmDeleteVideo(FileSystemEntity video) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Video'),
+          content: Text('Are you sure you want to delete ${video.path.split('/').last}?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                _deleteVideo(video);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteVideo(FileSystemEntity video) async {
+    try {
+      await video.delete();
+      _loadVideos(); // Refresh the list
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Video ${video.path.split('/').last} deleted.')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete video: $e')),
+      );
+    }
   }
 
   void _onShareVideo(String videoPath) async {
