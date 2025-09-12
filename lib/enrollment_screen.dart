@@ -50,11 +50,12 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
       await _cameraService.startVideoRecording();
       await Future.delayed(const Duration(seconds: 15));
       XFile? videoFile = await _cameraService.stopVideoRecording();
+      final date = DateTime.now().toIso8601String().replaceAll(':', '-');
 
       if (Platform.isAndroid || Platform.isIOS) {
         final directory = await getApplicationDocumentsDirectory();
         final path =
-            '${directory.path}/${widget.name}_enrollment_${DateTime.now()}.mp4';
+            '${directory.path}/${widget.name}_enrollment_$date.mp4';
         await videoFile.saveTo(path);
       }
       _showEnrollmentCompleteAlert();

@@ -28,6 +28,7 @@ class _VideoLibraryScreenState extends State<VideoLibraryScreen> {
     final files = directory.listSync();
     setState(() {
       _videos = files.where((file) => file.path.endsWith('.mp4')).toList();
+      _videos.sort((a, b) => b.statSync().modified.compareTo(a.statSync().modified));
     });
   }
 

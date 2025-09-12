@@ -84,8 +84,9 @@ class _RecordingScreenState extends State<RecordingScreen> {
       ).showSnackBar(const SnackBar(content: Text('Video downloaded.')));
     } else {
       final directory = await getApplicationDocumentsDirectory();
+      final date = DateTime.now().toIso8601String().replaceAll(':', '-');
       final path =
-          '${directory.path}/${widget.name}_${widget.task}_${DateTime.now()}.mp4';
+          '${directory.path}/${widget.name}_${widget.task}_$date.mp4';
       await file.saveTo(path);
 
       ScaffoldMessenger.of(
