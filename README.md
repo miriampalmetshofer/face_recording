@@ -8,7 +8,7 @@ Participants will be presented with a configuration screen where they can enter 
 
 ## Platforms
 
-*   **Mobile**: iOS and Android
+*   **Mobile**: iOS
 *   **Web**: Accessible via a web browser
 
 ## Getting Started
@@ -52,4 +52,3 @@ Participants will be presented with a configuration screen where they can enter 
     ```bash
     flutter run -d chrome
     ```
-    (or your preferred web browser)
