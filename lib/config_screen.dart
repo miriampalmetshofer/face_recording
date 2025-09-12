@@ -121,9 +121,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text(
-                        'Please enter a name and device for enrollment',
-                      ),
+                      content: Text('Please enter a name and device for enrollment'),
                     ),
                   );
                 }

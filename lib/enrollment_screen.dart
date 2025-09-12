@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:facerecording/camera_service.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:facerecording/app_config.dart';
 
 class EnrollmentScreen extends StatefulWidget {
   final String name;
   final String device;
-  final String task = "enrollment";
 
   const EnrollmentScreen({super.key, required this.name, required this.device});
 
@@ -48,14 +48,14 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
 
     try {
       await _cameraService.startVideoRecording();
-      await Future.delayed(const Duration(seconds: 15));
+      await Future.delayed(const Duration(seconds: AppConfig.enrollmentDurationSeconds));
       XFile? videoFile = await _cameraService.stopVideoRecording();
       final date = DateTime.now().toIso8601String().replaceAll(':', '-');
 
       if (Platform.isAndroid || Platform.isIOS) {
         final directory = await getApplicationDocumentsDirectory();
         final path =
-            '${directory.path}/${widget.name}_enrollment_$date.mp4';
+            '${directory.path}/${widget.name}_${widget.device}_enrollment_$date.mp4';
         await videoFile.saveTo(path);
       }
       _showEnrollmentCompleteAlert();

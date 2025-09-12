@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:facerecording/app_config.dart';
 
 class RecordingScreen extends StatefulWidget {
   final String task;
@@ -24,11 +25,10 @@ class RecordingScreen extends StatefulWidget {
 }
 
 class _RecordingScreenState extends State<RecordingScreen> {
-  static const int _initialTime = 10;
   late CameraService _cameraService;
   bool _isCameraInitialized = false;
   Timer? _timer;
-  int _remainingTime = _initialTime;
+  int _remainingTime = AppConfig.recordingDurationSeconds;
   bool _isRecording = false;
   final TextEditingController _textEditingController = TextEditingController();
 
@@ -74,7 +74,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
     final file = await _cameraService.stopVideoRecording();
     setState(() {
       _isRecording = false;
-      _remainingTime = _initialTime;
+      _remainingTime = AppConfig.recordingDurationSeconds;
     });
 
     if (kIsWeb) {
@@ -85,8 +85,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
     } else {
       final directory = await getApplicationDocumentsDirectory();
       final date = DateTime.now().toIso8601String().replaceAll(':', '-');
-      final path =
-          '${directory.path}/${widget.name}_${widget.task}_$date.mp4';
+      final path = '${directory.path}/${widget.name}_${widget.task}_$date.mp4';
       await file.saveTo(path);
 
       ScaffoldMessenger.of(
@@ -98,7 +97,9 @@ class _RecordingScreenState extends State<RecordingScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Danke das wars! Möchtest du deinen Text behalten?"),
+          title: const Text(
+            "Danke das wars! Möchtest du deinen Text behalten?",
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -107,7 +108,9 @@ class _RecordingScreenState extends State<RecordingScreen> {
                 );
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Text in Zwischenablage kopiert!')),
+                  const SnackBar(
+                    content: Text('Text in Zwischenablage kopiert!'),
+                  ),
                 );
               },
               child: const Text("Ja, in Zwischenablage kopieren."),
@@ -136,41 +139,46 @@ class _RecordingScreenState extends State<RecordingScreen> {
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Stell dir vor, du wachst eines Morgens auf und das Internet existiert nicht mehr. '
+            Column(
+              children: [
+                Text(
+                  'Stell dir vor, du wachst eines Morgens auf und das Internet existiert nicht mehr. '
                   'Schreibe eine kurze Geschichte darüber, wie dein Tag aussehen würde\n\n'
                   'Verbleibende Zeit: $_remainingTime s',
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 12),
-
-            // Show text area only while recording
-            if (_isRecording)
-              Expanded(
-                child: TextField(
-                  controller: _textEditingController,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  expands: true,
-                  decoration: const InputDecoration(
-                    hintText: "Beginne hier zu schreiben...",
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(16),
-                  ),
+                  style: const TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
-              ),
 
-            const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-            if (!_isRecording && _isCameraInitialized)
-              ElevatedButton(
-                onPressed: _startTimer,
-                child: const Text('Start Recording'),
-              ),
+                // Show text area only while recording
+                if (_isRecording)
+                  Expanded(
+                    child: TextField(
+                      controller: _textEditingController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      expands: true,
+                      decoration: const InputDecoration(
+                        hintText: "Beginne hier zu schreiben...",
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
+                    ),
+                  ),
+
+                const SizedBox(height: 12),
+
+                if (!_isRecording && _isCameraInitialized)
+                  ElevatedButton(
+                    onPressed: _startTimer,
+                    child: const Text('Start Recording'),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
