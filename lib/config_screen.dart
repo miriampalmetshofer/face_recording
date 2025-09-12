@@ -1,3 +1,4 @@
+import 'package:facerecording/enrollment_screen.dart';
 import 'package:facerecording/recording_screen.dart';
 import 'package:facerecording/video_library_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,12 @@ class _ConfigScreenState extends State<ConfigScreen> {
 
   final _devices = ['Desktop', 'Mobile'];
   final _tasks = ['Task1', 'Task2'];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +49,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-              ),
+              decoration: const InputDecoration(labelText: 'Name'),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _selectedDevice,
+              initialValue: _selectedDevice,
               hint: const Text('Select a Device'),
               onChanged: (String? newValue) {
                 setState(() {
@@ -64,7 +69,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _selectedTask,
+              initialValue: _selectedTask,
               hint: const Text('Select a Task'),
               onChanged: (String? newValue) {
                 setState(() {
@@ -95,13 +100,35 @@ class _ConfigScreenState extends State<ConfigScreen> {
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please fill all fields'),
-                    ),
+                    const SnackBar(content: Text('Please fill all fields')),
                   );
                 }
               },
               child: const Text('Start Recording'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                if (_nameController.text.isNotEmpty) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EnrollmentScreen(
+                        name: _nameController.text,
+                        device: _selectedDevice!,
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Please enter a name and device for enrollment',
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Enrollment'),
             ),
           ],
         ),

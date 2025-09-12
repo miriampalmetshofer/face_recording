@@ -7,10 +7,15 @@ import 'package:flutter/material.dart';
 
 abstract class CameraService {
   Future<void> initialize();
+
   Widget buildPreview();
+
   Future<void> startVideoRecording();
+
   Future<XFile> stopVideoRecording();
+
   void dispose();
+
   bool get isInitialized;
 }
 
@@ -37,7 +42,24 @@ class MobileAndWebCameraService implements CameraService {
 
   @override
   Widget buildPreview() {
-    return const SizedBox.shrink();
+    if (!_controller.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final size = _controller.value.previewSize!;
+
+    final preview = !kIsWeb
+        ? SizedBox(
+            width: size.height,
+            height: size.width,
+            child: CameraPreview(_controller),
+          )
+        : SizedBox(
+            width: size.width,
+            height: size.height,
+            child: CameraPreview(_controller),
+          );
+
+    return FittedBox(fit: BoxFit.cover, child: preview);
   }
 
   @override
