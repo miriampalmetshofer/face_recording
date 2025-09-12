@@ -4,6 +4,7 @@ import 'package:facerecording/camera_service.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:facerecording/app_config.dart';
+import 'package:facerecording/clock_overlay.dart';
 
 class EnrollmentScreen extends StatefulWidget {
   final String name;
@@ -74,8 +75,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Enrollment'),
-          content: const Text('Enrollment abgeschlossen!'),
+          title: const Text('Enrollment process'),
+          content: const Text('Enrollment process finished!'),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
@@ -92,14 +93,24 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Enrollment')),
+      appBar: AppBar(title: const Text('Enrollment process')),
       body: Center(
         child: Column(
           children: [
-            if (_isCameraServiceInitialized)
-              Expanded(child: _cameraService.buildPreview())
-            else
-              const Expanded(child: Center(child: CircularProgressIndicator())),
+            Expanded(
+              child: _isCameraServiceInitialized
+                  ? Stack(
+                fit: StackFit.expand,
+                children: [
+                  _cameraService.buildPreview(),
+                  ClockOverlay(
+                    durationSeconds: AppConfig.enrollmentDurationSeconds,
+                    isRecording: _isRecording,
+                  ),
+                ],
+              )
+                  : const Center(child: CircularProgressIndicator()),
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
@@ -112,6 +123,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
           ],
         ),
       ),
+
     );
   }
 }
