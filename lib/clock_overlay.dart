@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:facerecording/app_config.dart';
 
 class ClockOverlay extends StatefulWidget {
   final int durationSeconds;
@@ -60,11 +61,11 @@ class _ClockOverlayState extends State<ClockOverlay> {
     _timer = Timer.periodic(tickDuration, (timer) {
       setState(() {
         _progress = currentTick / totalTicks;
-        if (_progress < 0.25) {
+        if (_progress < AppConfig.headTurnRightThreshold) {
           _instruction = "Turn your head to the right";
-        } else if (_progress < 0.5) {
+        } else if (_progress < AppConfig.headTurnLeftThreshold) {
           _instruction = "Turn your head to the left";
-        } else if (_progress < 0.75) {
+        } else if (_progress < AppConfig.headTurnUpThreshold) {
           _instruction = "Turn your head up";
         } else {
           _instruction = "Turn your head down";
@@ -95,11 +96,11 @@ class ClockPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = min(size.width / 2, size.height / 2) * 0.8;
+    final radius = min(size.width / 2, size.height / 2) * AppConfig.clockRadiusScale;
     final paint = Paint()
       ..color = Colors.blue
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
+      ..strokeWidth = AppConfig.clockStrokeWidth;
 
     canvas.drawCircle(center, radius, paint);
 
@@ -110,13 +111,13 @@ class ClockPainter extends CustomPainter {
     );
     final handPaint = Paint()
       ..color = Colors.red
-      ..strokeWidth = 2.0;
+      ..strokeWidth = AppConfig.clockHandStrokeWidth;
     canvas.drawLine(center, handEndPoint, handPaint);
 
     final textPainter = TextPainter(
       text: TextSpan(
         text: instruction,
-        style: const TextStyle(color: Colors.white, fontSize: 24.0),
+        style: const TextStyle(color: Colors.white, fontSize: AppConfig.clockInstructionFontSize),
       ),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
@@ -141,7 +142,7 @@ class ClockPainter extends CustomPainter {
   }
 
   void _drawArrow(Canvas canvas, Offset center, double radius, double angle, Paint paint) {
-    final arrowLength = 20;
+    final arrowLength = AppConfig.clockArrowLength;
     final arrowAngle = pi / 6;
 
     final endPoint = Offset(

@@ -1,6 +1,7 @@
 import 'package:facerecording/enrollment_screen.dart';
 import 'package:facerecording/recording_screen.dart';
 import 'package:facerecording/video_library_screen.dart';
+import 'package:facerecording/app_config.dart';
 import 'package:flutter/material.dart';
 
 class ConfigScreen extends StatefulWidget {
@@ -44,7 +45,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
+          constraints: const BoxConstraints(maxWidth: AppConfig.configScreenMaxWidth),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

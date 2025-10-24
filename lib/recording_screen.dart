@@ -144,7 +144,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
           children: [
             Expanded(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 800),
+                constraints: const BoxConstraints(maxWidth: AppConfig.recordingScreenMaxWidth),
                 child: Column(
                   children: [
                 Text(
