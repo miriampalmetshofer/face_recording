@@ -19,29 +19,34 @@ class ClockPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, paint);
 
-    final handAngle = 2 * pi * progress - pi / 2;
-    final handEndPoint = Offset(
-      center.dx + radius * cos(handAngle),
-      center.dy + radius * sin(handAngle),
-    );
-    final handPaint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = AppConfig.clockHandStrokeWidth;
-    canvas.drawLine(center, handEndPoint, handPaint);
+    // Calculate dot position
+    final Offset dotPosition;
+    if (progress < AppConfig.clockDotToCircleProgress) {
+      // Phase 1: Dot moves from center straight up to circle outline
+      final moveProgress = progress / AppConfig.clockDotToCircleProgress;
+      final distanceFromCenter = radius * moveProgress;
+      dotPosition = Offset(
+        center.dx,
+        center.dy - distanceFromCenter,
+      );
+    } else {
+      // Phase 2: Dot moves around the circle perimeter
+      // Normalize progress to 0-1 range for circle movement
+      final circleProgress = (progress - AppConfig.clockDotToCircleProgress) /
+                            (1.0 - AppConfig.clockDotToCircleProgress);
+      // Start at top (-π/2) and go clockwise
+      final angle = 2 * pi * circleProgress - pi / 2;
+      dotPosition = Offset(
+        center.dx + radius * cos(angle),
+        center.dy + radius * sin(angle),
+      );
+    }
 
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: instruction,
-        style: const TextStyle(color: Colors.white, fontSize: AppConfig.clockInstructionFontSize),
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout();
-    textPainter.paint(
-        canvas,
-        Offset(center.dx - textPainter.width / 2,
-            center.dy - radius - textPainter.height - 10));
+    // Draw the blue dot
+    final dotPaint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(dotPosition, AppConfig.clockDotRadius, dotPaint);
 
     // Draw head turning instructions
     final instructionPaint = Paint()
