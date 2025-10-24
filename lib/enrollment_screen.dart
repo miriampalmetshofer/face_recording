@@ -2,6 +2,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:facerecording/camera_service.dart';
+import 'package:facerecording/web_utils.dart'
+    if (dart.library.html) 'package:facerecording/web_utils_web.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:facerecording/app_config.dart';
@@ -54,7 +56,9 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
       XFile? videoFile = await _cameraService.stopVideoRecording();
       final date = DateTime.now().toIso8601String().replaceAll(':', '-');
 
-      if (!kIsWeb) {
+      if (kIsWeb) {
+        downloadVideoWeb(videoFile, widget.name, 'enrollment');
+      } else {
         final directory = await getApplicationDocumentsDirectory();
         final path =
             '${directory.path}/${widget.name}_${widget.device}_enrollment_$date.mp4';
