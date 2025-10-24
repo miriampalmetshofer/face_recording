@@ -42,11 +42,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Name'),
@@ -129,6 +132,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
               child: const Text('Enrollment'),
             ),
           ],
+        ),
+      ),
         ),
       ),
     );

@@ -142,8 +142,11 @@ class _RecordingScreenState extends State<RecordingScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              children: [
+            Expanded(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 800),
+                child: Column(
+                  children: [
                 Text(
                   'Stell dir vor, du wachst eines Morgens auf und das Internet existiert nicht mehr. '
                   'Schreibe eine kurze Geschichte darüber, wie dein Tag aussehen würde\n\n'
@@ -178,6 +181,8 @@ class _RecordingScreenState extends State<RecordingScreen> {
                     child: const Text('Start Recording'),
                   ),
               ],
+            ),
+              ),
             ),
           ],
         ),
