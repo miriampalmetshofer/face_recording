@@ -36,6 +36,7 @@ class MobileAndWebCameraService implements CameraService {
     _controller = CameraController(
       frontCamera ?? cameras.first,
       ResolutionPreset.medium,
+      enableAudio: false,
     );
     await _controller.initialize();
   }
