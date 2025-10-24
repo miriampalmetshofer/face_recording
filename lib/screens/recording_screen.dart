@@ -148,8 +148,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
                 child: Column(
                   children: [
                 Text(
-                  'Stell dir vor, du wachst eines Morgens auf und das Internet existiert nicht mehr. '
-                  'Schreibe eine kurze Geschichte darüber, wie dein Tag aussehen würde\n\n'
+                  '${AppConfig.getTaskInstruction(widget.task)}\n\n'
                   'Verbleibende Zeit: $_remainingTime s',
                   style: const TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,

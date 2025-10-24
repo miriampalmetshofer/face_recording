@@ -19,4 +19,14 @@ class AppConfig {
   static const double clockHandStrokeWidth = 2.0;
   static const double clockArrowLength = 20.0;
   static const double clockInstructionFontSize = 24.0;
+
+  // Task instructions
+  static const Map<String, String> taskInstructions = {
+    'Task1': 'Wenn du in nächster Zeit etwas Neues lernen könntest – egal was –, was wäre das? Erkläre, warum du es lernen möchtest und wie du am besten anfangen würdest.',
+    'Task2': 'Überlege dir eine Gewohnheit in deinem Alltag, die du gerne verbessern würdest. Beschreibe kurz, warum du diese verändern möchtest und wie du dabei vorgehen würdest.',
+  };
+
+  static String getTaskInstruction(String task) {
+    return taskInstructions[task] ?? 'Keine Aufgabenbeschreibung verfügbar.';
+  }
 }
