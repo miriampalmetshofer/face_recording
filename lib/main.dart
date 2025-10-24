@@ -1,4 +1,4 @@
-import 'package:facerecording/config_screen.dart';
+import 'package:facerecording/screens/config_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

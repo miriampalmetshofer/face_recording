@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:facerecording/web_utils.dart'
-    if (dart.library.html) 'package:facerecording/web_utils_web.dart';
-import 'package:facerecording/camera_service.dart';
+import 'package:facerecording/services/web_download_service_stub.dart'
+    if (dart.library.html) 'package:facerecording/services/web_download_service.dart';
+import 'package:facerecording/services/camera_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:facerecording/app_config.dart';
+import 'package:facerecording/config/app_config.dart';
 
 class RecordingScreen extends StatefulWidget {
   final String task;
