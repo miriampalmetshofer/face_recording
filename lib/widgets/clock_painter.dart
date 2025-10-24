@@ -5,8 +5,9 @@ import 'package:facerecording/config/app_config.dart';
 class ClockPainter extends CustomPainter {
   final double progress;
   final String instruction;
+  final bool isClockwise;
 
-  ClockPainter(this.progress, this.instruction);
+  ClockPainter(this.progress, this.instruction, this.isClockwise);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -34,8 +35,10 @@ class ClockPainter extends CustomPainter {
       // Normalize progress to 0-1 range for circle movement
       final circleProgress = (progress - AppConfig.clockDotToCircleProgress) /
                             (1.0 - AppConfig.clockDotToCircleProgress);
-      // Start at top (-π/2) and go clockwise
-      final angle = 2 * pi * circleProgress - pi / 2;
+      // Start at top (-π/2) and go clockwise or counterclockwise
+      final angle = isClockwise
+          ? 2 * pi * circleProgress - pi / 2
+          : -2 * pi * circleProgress - pi / 2;
       dotPosition = Offset(
         center.dx + radius * cos(angle),
         center.dy + radius * sin(angle),

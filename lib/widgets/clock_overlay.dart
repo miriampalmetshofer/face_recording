@@ -6,11 +6,13 @@ import 'package:facerecording/widgets/clock_painter.dart';
 class ClockOverlay extends StatefulWidget {
   final int durationSeconds;
   final bool isRecording;
+  final bool isClockwise;
 
   const ClockOverlay({
     super.key,
     required this.durationSeconds,
     required this.isRecording,
+    required this.isClockwise,
   });
 
   @override
@@ -80,7 +82,7 @@ class _ClockOverlayState extends State<ClockOverlay> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: ClockPainter(_progress, _instruction),
+      painter: ClockPainter(_progress, _instruction, widget.isClockwise),
       child: Container(),
     );
   }

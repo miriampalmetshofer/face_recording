@@ -22,6 +22,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
   bool _isRecording = false;
   late CameraService _cameraService;
   bool _isCameraServiceInitialized = false;
+  bool _isClockwise = true;
 
   @override
   void initState() {
@@ -110,6 +111,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                   ClockOverlay(
                     durationSeconds: AppConfig.enrollmentDurationSeconds,
                     isRecording: _isRecording,
+                    isClockwise: _isClockwise,
                   ),
                 ],
               )
@@ -117,11 +119,28 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: _isRecording || !_isCameraServiceInitialized
-                    ? null
-                    : _startEnrollmentRecording,
-                child: Text(_isRecording ? 'Recording...' : 'Start Recording'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(_isClockwise ? Icons.rotate_right : Icons.rotate_left),
+                    onPressed: _isRecording
+                        ? null
+                        : () {
+                            setState(() {
+                              _isClockwise = !_isClockwise;
+                            });
+                          },
+                    tooltip: _isClockwise ? 'Clockwise' : 'Counterclockwise',
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: _isRecording || !_isCameraServiceInitialized
+                        ? null
+                        : _startEnrollmentRecording,
+                    child: Text(_isRecording ? 'Recording...' : 'Start Recording'),
+                  ),
+                ],
               ),
             ),
           ],
