@@ -77,15 +77,17 @@ class _RecordingScreenState extends State<RecordingScreen> {
       _remainingTime = AppConfig.recordingDurationSeconds;
     });
 
+    final formattedDate = AppConfig.getFormattedDateTime();
+    final lowercaseName = widget.name.toLowerCase();
+
     if (kIsWeb) {
-      downloadVideoWeb(file, widget.name, widget.task);
+      downloadVideoWeb(file, lowercaseName, formattedDate);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Video downloaded.')));
     } else {
       final directory = await getApplicationDocumentsDirectory();
-      final date = DateTime.now().toIso8601String().replaceAll(':', '-');
-      final path = '${directory.path}/${widget.name}_${widget.task}_$date.mp4';
+      final path = '${directory.path}/${lowercaseName}_$formattedDate.mp4';
       await file.saveTo(path);
 
       ScaffoldMessenger.of(

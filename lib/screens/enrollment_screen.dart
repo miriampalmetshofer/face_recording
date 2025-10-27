@@ -54,14 +54,16 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
       await _cameraService.startVideoRecording();
       await Future.delayed(const Duration(seconds: AppConfig.enrollmentDurationSeconds));
       XFile? videoFile = await _cameraService.stopVideoRecording();
-      final date = DateTime.now().toIso8601String().replaceAll(':', '-');
+
+      final formattedDate = AppConfig.getFormattedDateTime();
+      final lowercaseName = widget.name.toLowerCase();
 
       if (kIsWeb) {
-        downloadVideoWeb(videoFile, widget.name, 'enrollment');
+        downloadVideoWeb(videoFile, '${lowercaseName}_enrollment', formattedDate);
       } else {
         final directory = await getApplicationDocumentsDirectory();
         final path =
-            '${directory.path}/${widget.name}_${widget.device}_enrollment_$date.mp4';
+            '${directory.path}/${lowercaseName}_enrollment_$formattedDate.mp4';
         await videoFile.saveTo(path);
       }
       _showEnrollmentCompleteAlert();
