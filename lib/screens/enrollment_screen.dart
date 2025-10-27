@@ -57,13 +57,14 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
 
       final formattedDate = AppConfig.getFormattedDateTime();
       final lowercaseName = widget.name.toLowerCase();
+      final direction = _isClockwise ? 'cw' : 'ccw';
 
       if (kIsWeb) {
-        downloadVideoWeb(videoFile, '${lowercaseName}_enrollment', formattedDate);
+        downloadVideoWeb(videoFile, '${lowercaseName}_enrollment_$direction', formattedDate);
       } else {
         final directory = await getApplicationDocumentsDirectory();
         final path =
-            '${directory.path}/${lowercaseName}_enrollment_$formattedDate.mp4';
+            '${directory.path}/${lowercaseName}_enrollment_${direction}_$formattedDate.mp4';
         await videoFile.saveTo(path);
       }
       _showEnrollmentCompleteAlert();
@@ -110,10 +111,13 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                 fit: StackFit.expand,
                 children: [
                   _cameraService.buildPreview(),
-                  ClockOverlay(
-                    durationSeconds: AppConfig.enrollmentDurationSeconds,
-                    isRecording: _isRecording,
-                    isClockwise: _isClockwise,
+                  Align(
+                    alignment: Alignment(0.0, 0.3),
+                    child: ClockOverlay(
+                      durationSeconds: AppConfig.enrollmentDurationSeconds,
+                      isRecording: _isRecording,
+                      isClockwise: _isClockwise,
+                    ),
                   ),
                 ],
               )
