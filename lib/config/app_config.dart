@@ -14,15 +14,15 @@ class AppConfig {
   // After headTurnUpThreshold, head turns down
 
   // Clock overlay visual settings
-  static const double clockRadiusScale = 0.6; // Percentage of available radius
-  static const double clockRadiusScaleMobile = 0.4; // Smaller for mobile
+  static const double clockRadiusScale = 0.6;
+  static const double clockRadiusScaleMobile = 0.5; // Smaller for mobile
   static const double clockStrokeWidth = 4.0;
   static const double clockHandStrokeWidth = 2.0;
   static const double clockArrowLength = 20.0;
   static const double clockInstructionFontSize = 24.0;
-  static const double clockDotRadius = 12.0; // Radius of the moving dot
+  static const double clockDotRadius = 12.0;
   static const double clockDotRadiusMobile = 8.0; // Smaller for mobile
-  static const double clockDotToCircleProgress = 0.15; // Progress threshold when dot reaches circle outline
+  static const double clockDotToCircleProgress = 0.15;
 
   // Task instructions
   static const Map<String, String> taskInstructions = {
