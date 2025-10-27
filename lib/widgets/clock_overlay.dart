@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:facerecording/config/app_config.dart';
 import 'package:facerecording/widgets/clock_painter.dart';
@@ -81,8 +83,9 @@ class _ClockOverlayState extends State<ClockOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = !kIsWeb && (Platform.isIOS || Platform.isAndroid);
     return CustomPaint(
-      painter: ClockPainter(_progress, _instruction, widget.isClockwise),
+      painter: ClockPainter(_progress, _instruction, widget.isClockwise, isMobile),
       child: Container(),
     );
   }

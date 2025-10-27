@@ -6,13 +6,15 @@ class ClockPainter extends CustomPainter {
   final double progress;
   final String instruction;
   final bool isClockwise;
+  final bool isMobile;
 
-  ClockPainter(this.progress, this.instruction, this.isClockwise);
+  ClockPainter(this.progress, this.instruction, this.isClockwise, this.isMobile);
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = min(size.width / 2, size.height / 2) * AppConfig.clockRadiusScale;
+    final radiusScale = isMobile ? AppConfig.clockRadiusScaleMobile : AppConfig.clockRadiusScale;
+    final radius = min(size.width / 2, size.height / 2) * radiusScale;
     final paint = Paint()
       ..color = Colors.blue
       ..style = PaintingStyle.stroke
@@ -49,7 +51,8 @@ class ClockPainter extends CustomPainter {
     final dotPaint = Paint()
       ..color = Colors.blue
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(dotPosition, AppConfig.clockDotRadius, dotPaint);
+    final dotRadius = isMobile ? AppConfig.clockDotRadiusMobile : AppConfig.clockDotRadius;
+    canvas.drawCircle(dotPosition, dotRadius, dotPaint);
 
     // Draw head turning instructions
     final instructionPaint = Paint()
