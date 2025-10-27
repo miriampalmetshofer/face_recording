@@ -101,6 +101,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
     if (_textEditingController.text.trim().isNotEmpty) {
       showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (context) => AlertDialog(
           title: const Text(
             "Danke das wars! Möchtest du deinen Text behalten?",
