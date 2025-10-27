@@ -15,9 +15,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
   final _nameController = TextEditingController();
   String? _selectedDevice;
   String? _selectedTask;
+  String? _selectedSetting;
 
   final _devices = ['Desktop', 'Mobile'];
   final _tasks = ['Task1', 'Task2'];
+  final _settings = ['easy', 'tricky angle', 'tricky lighting'];
 
   @override
   void dispose() {
@@ -87,11 +89,28 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 );
               }).toList(),
             ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              initialValue: _selectedSetting,
+              hint: const Text('Select a Setting'),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedSetting = newValue;
+                });
+              },
+              items: _settings.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
                 if (_selectedTask != null &&
                     _selectedDevice != null &&
+                    _selectedSetting != null &&
                     _nameController.text.isNotEmpty) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -99,6 +118,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                         name: _nameController.text,
                         device: _selectedDevice!,
                         task: _selectedTask!,
+                        setting: _selectedSetting!,
                       ),
                     ),
                   );
@@ -113,19 +133,22 @@ class _ConfigScreenState extends State<ConfigScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                if (_nameController.text.isNotEmpty) {
+                if (_nameController.text.isNotEmpty &&
+                    _selectedDevice != null &&
+                    _selectedSetting != null) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => EnrollmentScreen(
                         name: _nameController.text,
                         device: _selectedDevice!,
+                        setting: _selectedSetting!,
                       ),
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Please enter a name and device for enrollment'),
+                      content: Text('Please fill all fields for enrollment'),
                     ),
                   );
                 }

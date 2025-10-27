@@ -12,12 +12,14 @@ class RecordingScreen extends StatefulWidget {
   final String task;
   final String device;
   final String name;
+  final String setting;
 
   const RecordingScreen({
     super.key,
     required this.task,
     required this.name,
     required this.device,
+    required this.setting,
   });
 
   @override
@@ -79,15 +81,16 @@ class _RecordingScreenState extends State<RecordingScreen> {
 
     final formattedDate = AppConfig.getFormattedDateTime();
     final lowercaseName = widget.name.toLowerCase();
+    final settingCode = AppConfig.getSettingCode(widget.setting);
 
     if (kIsWeb) {
-      downloadVideoWeb(file, lowercaseName, formattedDate);
+      downloadVideoWeb(file, '${lowercaseName}_$settingCode', formattedDate);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Video downloaded.')));
     } else {
       final directory = await getApplicationDocumentsDirectory();
-      final path = '${directory.path}/${lowercaseName}_$formattedDate.mp4';
+      final path = '${directory.path}/${lowercaseName}_${settingCode}_$formattedDate.mp4';
       await file.saveTo(path);
 
       ScaffoldMessenger.of(

@@ -11,8 +11,14 @@ import 'package:facerecording/widgets/clock_overlay.dart';
 class EnrollmentScreen extends StatefulWidget {
   final String name;
   final String device;
+  final String setting;
 
-  const EnrollmentScreen({super.key, required this.name, required this.device});
+  const EnrollmentScreen({
+    super.key,
+    required this.name,
+    required this.device,
+    required this.setting,
+  });
 
   @override
   _EnrollmentScreenState createState() => _EnrollmentScreenState();
@@ -58,13 +64,14 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
       final formattedDate = AppConfig.getFormattedDateTime();
       final lowercaseName = widget.name.toLowerCase();
       final direction = _isClockwise ? 'cw' : 'ccw';
+      final settingCode = AppConfig.getSettingCode(widget.setting);
 
       if (kIsWeb) {
-        downloadVideoWeb(videoFile, '${lowercaseName}_enrollment_$direction', formattedDate);
+        downloadVideoWeb(videoFile, '${lowercaseName}_enrollment_${settingCode}_$direction', formattedDate);
       } else {
         final directory = await getApplicationDocumentsDirectory();
         final path =
-            '${directory.path}/${lowercaseName}_enrollment_${direction}_$formattedDate.mp4';
+            '${directory.path}/${lowercaseName}_enrollment_${settingCode}_${direction}_$formattedDate.mp4';
         await videoFile.saveTo(path);
       }
       _showEnrollmentCompleteAlert();

@@ -36,4 +36,17 @@ class AppConfig {
     final now = DateTime.now();
     return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}-${now.second.toString().padLeft(2, '0')}';
   }
+
+  static String getSettingCode(String setting) {
+    switch (setting) {
+      case 'easy':
+        return 'easy';
+      case 'tricky angle':
+        return 'tricky_angle';
+      case 'tricky lighting':
+        return 'tricky_lighting';
+      default:
+        return setting.replaceAll(' ', '_');
+    }
+  }
 }
