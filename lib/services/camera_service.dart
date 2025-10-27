@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:facerecording/config/app_config.dart';
 
 abstract class CameraService {
   Future<void> initialize();
@@ -37,6 +38,7 @@ class MobileAndWebCameraService implements CameraService {
       frontCamera ?? cameras.first,
       ResolutionPreset.medium,
       enableAudio: false,
+      fps: AppConfig.cameraFps,
     );
     await _controller.initialize();
   }

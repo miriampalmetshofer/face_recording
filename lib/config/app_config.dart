@@ -3,6 +3,9 @@ class AppConfig {
   static const int enrollmentDurationSeconds = 15;
   static const int recordingDurationSeconds = 10;
 
+  // Camera settings
+  static const int cameraFps = 30;
+
   // UI Layout constraints for web/desktop
   static const double configScreenMaxWidth = 600;
   static const double recordingScreenMaxWidth = 800;
