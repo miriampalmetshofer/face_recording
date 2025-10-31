@@ -81,7 +81,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
 
     final formattedDate = AppConfig.getFormattedDateTime();
     final lowercaseName = widget.name.toLowerCase();
-    final settingCode = AppConfig.getSettingCode(widget.setting);
+    final settingCode = widget.setting;
 
     if (kIsWeb) {
       downloadVideoWeb(file, '${lowercaseName}_$settingCode', formattedDate);

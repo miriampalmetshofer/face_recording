@@ -19,7 +19,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
 
   final _devices = ['Desktop', 'Mobile'];
   final _tasks = ['Task1', 'Task2'];
-  final _settings = ['easy', 'tricky angle', 'tricky lighting'];
+  final _settings = ['easy', 'angle', 'lighting'];
 
   @override
   void dispose() {

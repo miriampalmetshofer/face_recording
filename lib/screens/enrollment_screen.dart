@@ -64,7 +64,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
       final formattedDate = AppConfig.getFormattedDateTime();
       final lowercaseName = widget.name.toLowerCase();
       final direction = _isClockwise ? 'cw' : 'ccw';
-      final settingCode = AppConfig.getSettingCode(widget.setting);
+      final settingCode = widget.setting;
 
       if (kIsWeb) {
         downloadVideoWeb(videoFile, '${lowercaseName}_enrollment_${settingCode}_$direction', formattedDate);
