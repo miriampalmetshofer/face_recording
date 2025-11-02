@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:facerecording/config/app_config.dart';
 import 'package:facerecording/widgets/clock_painter.dart';
 
 class ClockOverlay extends StatefulWidget {
@@ -24,7 +23,6 @@ class ClockOverlay extends StatefulWidget {
 class _ClockOverlayState extends State<ClockOverlay> {
   late Timer _timer;
   double _progress = 0.0;
-  String _instruction = "Look Straight";
 
   @override
   void initState() {
@@ -43,7 +41,6 @@ class _ClockOverlayState extends State<ClockOverlay> {
       _timer.cancel();
       setState(() {
         _progress = 0.0;
-        _instruction = "Look Straight";
       });
     }
   }
@@ -64,15 +61,6 @@ class _ClockOverlayState extends State<ClockOverlay> {
     _timer = Timer.periodic(tickDuration, (timer) {
       setState(() {
         _progress = currentTick / totalTicks;
-        if (_progress < AppConfig.headTurnRightThreshold) {
-          _instruction = "Turn your head to the right";
-        } else if (_progress < AppConfig.headTurnLeftThreshold) {
-          _instruction = "Turn your head to the left";
-        } else if (_progress < AppConfig.headTurnUpThreshold) {
-          _instruction = "Turn your head up";
-        } else {
-          _instruction = "Turn your head down";
-        }
       });
       currentTick++;
       if (currentTick > totalTicks) {
@@ -85,7 +73,7 @@ class _ClockOverlayState extends State<ClockOverlay> {
   Widget build(BuildContext context) {
     final isMobile = !kIsWeb && (Platform.isIOS || Platform.isAndroid);
     return CustomPaint(
-      painter: ClockPainter(_progress, _instruction, widget.isClockwise, isMobile),
+      painter: ClockPainter(_progress, widget.isClockwise, isMobile),
       child: Container(),
     );
   }

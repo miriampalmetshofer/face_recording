@@ -4,11 +4,10 @@ import 'package:facerecording/config/app_config.dart';
 
 class ClockPainter extends CustomPainter {
   final double progress;
-  final String instruction;
   final bool isClockwise;
   final bool isMobile;
 
-  ClockPainter(this.progress, this.instruction, this.isClockwise, this.isMobile);
+  ClockPainter(this.progress, this.isClockwise, this.isMobile);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -24,9 +23,13 @@ class ClockPainter extends CustomPainter {
 
     // Calculate dot position
     final Offset dotPosition;
-    if (progress < AppConfig.clockDotToCircleProgress) {
+    if (progress < AppConfig.headStayFrontalThreshold) {
+      // Phase 0: Dot stays at center for frontal capture
+      dotPosition = center;
+    } else if (progress < AppConfig.headStayFrontalThreshold + AppConfig.clockDotToCircleProgress) {
       // Phase 1: Dot moves from center straight up to circle outline
-      final moveProgress = progress / AppConfig.clockDotToCircleProgress;
+      final adjustedProgress = progress - AppConfig.headStayFrontalThreshold;
+      final moveProgress = adjustedProgress / AppConfig.clockDotToCircleProgress;
       final distanceFromCenter = radius * moveProgress;
       dotPosition = Offset(
         center.dx,
@@ -35,8 +38,9 @@ class ClockPainter extends CustomPainter {
     } else {
       // Phase 2: Dot moves around the circle perimeter
       // Normalize progress to 0-1 range for circle movement
-      final circleProgress = (progress - AppConfig.clockDotToCircleProgress) /
-                            (1.0 - AppConfig.clockDotToCircleProgress);
+      final adjustedProgress = progress - AppConfig.headStayFrontalThreshold;
+      final circleProgress = (adjustedProgress - AppConfig.clockDotToCircleProgress) /
+                            (1.0 - AppConfig.headStayFrontalThreshold - AppConfig.clockDotToCircleProgress);
       // Start at top (-π/2) and go clockwise or counterclockwise
       final angle = isClockwise
           ? 2 * pi * circleProgress - pi / 2

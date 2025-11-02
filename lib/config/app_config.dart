@@ -10,19 +10,14 @@ class AppConfig {
   static const double configScreenMaxWidth = 600;
   static const double recordingScreenMaxWidth = 800;
 
-  // Enrollment head turning instruction thresholds (0.0 to 1.0)
-  static const double headTurnRightThreshold = 0.25;
-  static const double headTurnLeftThreshold = 0.5;
-  static const double headTurnUpThreshold = 0.75;
-  // After headTurnUpThreshold, head turns down
+  // Enrollment dot behavior thresholds (0.0 to 1.0)
+  static const double headStayFrontalThreshold = 0.1; // Stay looking straight for frontal capture
 
   // Clock overlay visual settings
   static const double clockRadiusScale = 0.6;
   static const double clockRadiusScaleMobile = 0.5; // Smaller for mobile
   static const double clockStrokeWidth = 4.0;
-  static const double clockHandStrokeWidth = 2.0;
   static const double clockArrowLength = 20.0;
-  static const double clockInstructionFontSize = 24.0;
   static const double clockDotRadius = 12.0;
   static const double clockDotRadiusMobile = 8.0; // Smaller for mobile
   static const double clockDotToCircleProgress = 0.15;
