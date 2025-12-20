@@ -18,7 +18,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
   String? _selectedSetting;
 
   final _devices = ['Desktop', 'Mobile'];
-  final _tasks = ['Task1', 'Task2'];
+  final _tasks = ['Task1', 'Task2', 'Task3', 'Task4', 'Task5'];
   final _settings = ['easy', 'angle', 'lighting'];
 
   @override
