@@ -21,7 +21,7 @@ class ClockOverlay extends StatefulWidget {
 }
 
 class _ClockOverlayState extends State<ClockOverlay> {
-  late Timer _timer;
+  Timer? _timer;
   double _progress = 0.0;
 
   @override
@@ -38,7 +38,7 @@ class _ClockOverlayState extends State<ClockOverlay> {
     if (widget.isRecording && !oldWidget.isRecording) {
       _startTimer();
     } else if (!widget.isRecording && oldWidget.isRecording) {
-      _timer.cancel();
+      _timer?.cancel();
       setState(() {
         _progress = 0.0;
       });
@@ -47,8 +47,8 @@ class _ClockOverlayState extends State<ClockOverlay> {
 
   @override
   void dispose() {
-    if (_timer.isActive) {
-      _timer.cancel();
+    if (_timer?.isActive ?? false) {
+      _timer?.cancel();
     }
     super.dispose();
   }
